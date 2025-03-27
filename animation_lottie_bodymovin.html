@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Animation - Bodymovin</title>
+    <script src="/lib/bodymovin.js"></script>
+
+    <style>
+      #bm {
+        width: 500px;
+        height: 500px;
+        position: relative;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="bm"></div>
+    <script type="module">
+      var animation = bodymovin.loadAnimation({
+        container: document.getElementById("bm"),
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        path: "animation.json",
+      });
+    </script>
+  </body>
+</html>

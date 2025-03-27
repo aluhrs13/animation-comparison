@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Animation - dotlottie</title>
+  </head>
+  <body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <script type="module">
+      import { DotLottie } from "/lib/dotlottie-web.js";
+
+      new DotLottie({
+        autoplay: true,
+        loop: true,
+        canvas: document.getElementById("canvas"),
+        src: "animation.dotlottie",
+      });
+    </script>
+  </body>
+</html>

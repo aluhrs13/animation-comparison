@@ -232,6 +232,245 @@ def extract_and_save_assets(lottie_data: Dict[str, Any], output_dir: str, base_f
         else:
             logging.warning(f"Unknown asset type: {asset_id}")
 
+def find_shapes_recursive(obj: Any, path: List[str] = None, shapes: List[Dict] = None) -> List[Dict]:
+    """
+    Recursively find all shapes in the Lottie data.
+    
+    Args:
+        obj: The object to examine
+        path: Current path in the object hierarchy
+        shapes: List to collect shapes and their paths
+        
+    Returns:
+        List of dictionaries containing shapes and their metadata
+    """
+    if path is None:
+        path = []
+    if shapes is None:
+        shapes = []
+    
+    if not isinstance(obj, (dict, list)):
+        return shapes
+    
+    if isinstance(obj, dict):
+        # Check if this is a shape definition
+        if 'ty' in obj and obj.get('ty') in ['sh', 'rc', 'el', 'sr', 'st', 'fl', 'gf', 'gs']:
+            # Found a shape - save it with its path
+            # Shape types: sh (path), rc (rectangle), el (ellipse), sr (star), 
+            # st (stroke), fl (fill), gf (gradient fill), gs (gradient stroke)
+            shape_name = obj.get('nm', 'unnamed_shape')
+            shapes.append({
+                'shape': obj,
+                'name': shape_name,
+                'path': list(path),
+                'type': obj.get('ty', 'unknown')
+            })
+        
+        # Also check if this is a shape group (a container for shapes)
+        if 'ty' in obj and obj.get('ty') == 'gr' and 'it' in obj:
+            # This is a shape group - it can contain multiple shapes
+            group_name = obj.get('nm', 'unnamed_group')
+            shapes.append({
+                'shape': obj,
+                'name': group_name,
+                'path': list(path),
+                'type': 'group'
+            })
+        
+        # Continue recursion
+        for key, value in obj.items():
+            find_shapes_recursive(value, path + [key], shapes)
+    
+    elif isinstance(obj, list):
+        for i, item in enumerate(obj):
+            find_shapes_recursive(item, path + [str(i)], shapes)
+    
+    return shapes
+
+def create_static_shape_animation(lottie_data: Dict[str, Any], shape_data: Dict) -> Dict[str, Any]:
+    """
+    Create a new static Lottie animation from a shape.
+    
+    Args:
+        lottie_data: The original Lottie data
+        shape_data: The shape data to convert
+        
+    Returns:
+        A new Lottie animation containing just the static shape
+    """
+    # Create a base animation with the same settings as the original
+    new_animation = {
+        "v": lottie_data.get("v", "5.7.0"),
+        "fr": lottie_data.get("fr", 60),
+        "ip": 0,
+        "op": 1,  # Just 1 frame for static
+        "w": lottie_data.get("w", 512),
+        "h": lottie_data.get("h", 512),
+        "nm": f"Shape_{shape_data['name']}",
+        "ddd": 0,
+    }
+    
+    shape_obj = shape_data['shape']
+    
+    # Create a shape layer
+    if shape_data['type'] == 'group':
+        # If it's a shape group, use it directly
+        shape_layer = {
+            "ddd": 0,
+            "ind": 1,
+            "ty": 4,  # Shape layer
+            "nm": f"Shape_{shape_data['name']}",
+            "sr": 1,
+            "ks": {
+                "o": {"a": 0, "k": 100},  # Opacity
+                "r": {"a": 0, "k": 0},     # Rotation
+                "p": {"a": 0, "k": [new_animation["w"]/2, new_animation["h"]/2, 0]},  # Position
+                "a": {"a": 0, "k": [0, 0, 0]},    # Anchor
+                "s": {"a": 0, "k": [100, 100, 100]}  # Scale
+            },
+            "ao": 0,
+            "shapes": [copy.deepcopy(shape_obj)],
+            "ip": 0,
+            "op": 1,
+            "st": 0,
+            "bm": 0
+        }
+    elif shape_data['type'] in ['sh', 'rc', 'el', 'sr']:
+        # Individual shapes need to be wrapped in a shape group
+        shape_layer = {
+            "ddd": 0,
+            "ind": 1,
+            "ty": 4,  # Shape layer
+            "nm": f"Shape_{shape_data['name']}",
+            "sr": 1,
+            "ks": {
+                "o": {"a": 0, "k": 100},
+                "r": {"a": 0, "k": 0},
+                "p": {"a": 0, "k": [new_animation["w"]/2, new_animation["h"]/2, 0]},
+                "a": {"a": 0, "k": [0, 0, 0]},
+                "s": {"a": 0, "k": [100, 100, 100]}
+            },
+            "ao": 0,
+            "shapes": [{
+                "ty": "gr",
+                "it": [
+                    copy.deepcopy(shape_obj),
+                    {
+                        "ty": "st",  # Add a simple stroke if none exists
+                        "c": {"a": 0, "k": [0, 0, 0, 1]},
+                        "o": {"a": 0, "k": 100},
+                        "w": {"a": 0, "k": 2},
+                        "lc": 2,
+                        "lj": 2,
+                        "nm": "Stroke"
+                    },
+                    {
+                        "ty": "tr",  # Transform
+                        "p": {"a": 0, "k": [0, 0]},
+                        "a": {"a": 0, "k": [0, 0]},
+                        "s": {"a": 0, "k": [100, 100]},
+                        "r": {"a": 0, "k": 0},
+                        "o": {"a": 0, "k": 100},
+                        "sk": {"a": 0, "k": 0},
+                        "sa": {"a": 0, "k": 0},
+                        "nm": "Transform"
+                    }
+                ],
+                "nm": f"Group_{shape_data['name']}"
+            }],
+            "ip": 0,
+            "op": 1,
+            "st": 0,
+            "bm": 0
+        }
+    else:
+        # For other types (fills, strokes, etc.), we need a complete shape to apply them to
+        # Just create a simple rectangle with the style applied
+        shape_layer = {
+            "ddd": 0,
+            "ind": 1,
+            "ty": 4,
+            "nm": f"Style_{shape_data['name']}",
+            "sr": 1,
+            "ks": {
+                "o": {"a": 0, "k": 100},
+                "r": {"a": 0, "k": 0},
+                "p": {"a": 0, "k": [new_animation["w"]/2, new_animation["h"]/2, 0]},
+                "a": {"a": 0, "k": [0, 0, 0]},
+                "s": {"a": 0, "k": [100, 100, 100]}
+            },
+            "ao": 0,
+            "shapes": [{
+                "ty": "gr",
+                "it": [
+                    {
+                        "ty": "rc",  # Rectangle
+                        "d": 1,
+                        "s": {"a": 0, "k": [100, 100]},
+                        "p": {"a": 0, "k": [0, 0]},
+                        "r": {"a": 0, "k": 0},
+                        "nm": "Rectangle"
+                    },
+                    copy.deepcopy(shape_obj),  # Apply the style to the rectangle
+                    {
+                        "ty": "tr",
+                        "p": {"a": 0, "k": [0, 0]},
+                        "a": {"a": 0, "k": [0, 0]},
+                        "s": {"a": 0, "k": [100, 100]},
+                        "r": {"a": 0, "k": 0},
+                        "o": {"a": 0, "k": 100},
+                        "sk": {"a": 0, "k": 0},
+                        "sa": {"a": 0, "k": 0},
+                        "nm": "Transform"
+                    }
+                ],
+                "nm": f"Group_{shape_data['name']}"
+            }],
+            "ip": 0,
+            "op": 1,
+            "st": 0,
+            "bm": 0
+        }
+    
+    new_animation['layers'] = [shape_layer]
+    return new_animation
+
+def extract_and_save_shapes(lottie_data: Dict[str, Any], output_dir: str) -> None:
+    """
+    Extract shapes from a Lottie animation and save them as separate static files.
+    
+    Args:
+        lottie_data: The Lottie animation data
+        output_dir: Directory to save the extracted shapes
+    """
+    # Find all shapes in the Lottie data
+    shapes = find_shapes_recursive(lottie_data)
+    
+    if not shapes:
+        logging.info("No shapes found in the Lottie animation.")
+        return
+    
+    logging.info(f"Found {len(shapes)} shapes to extract.")
+    
+    # Process each shape
+    for shape_data in shapes:
+        shape_name = shape_data['name']
+        
+        # Make a safe filename
+        safe_name = ''.join(c if c.isalnum() or c in '_- ' else '_' for c in shape_name)
+        shape_type = shape_data['type']
+        output_filename = f"shape_{shape_type}_{safe_name}.json"
+        output_path = os.path.join(output_dir, output_filename)
+        
+        # Create a static animation with just this shape
+        new_animation = create_static_shape_animation(lottie_data, shape_data)
+        
+        # Write to file
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(new_animation, f, indent=2)
+        
+        logging.info(f"Saved static shape to: {output_path}")
+
 def split_lottie_animation(input_file: str, output_dir: str = None) -> None:
     """
     Split a Lottie animation into multiple files.
@@ -289,7 +528,7 @@ def split_lottie_animation(input_file: str, output_dir: str = None) -> None:
         
         # Find assets used by this layer
         used_assets = set()
-        extract_used_assets(layer, lottie_data.get('assets', []), used_assets)
+        #extract_used_assets(layer, lottie_data.get('assets', []), used_assets)
         logging.debug(f"Extracted used assets: {used_assets}")
         
         # Keep only the assets needed for this part
@@ -314,8 +553,11 @@ def split_lottie_animation(input_file: str, output_dir: str = None) -> None:
         
         logging.info(f"Writing layer {i} to file: {output_path}")
     
+    # Extract and save shapes
+    extract_and_save_shapes(lottie_data, output_dir)
+    
     # Extract and save assets
-    extract_and_save_assets(lottie_data, output_dir, base_filename)
+    #extract_and_save_assets(lottie_data, output_dir, base_filename)
     
     logging.info("Finished splitting Lottie animation.")
 

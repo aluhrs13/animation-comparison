@@ -18,6 +18,22 @@
   </head>
   <body>
     <div id="bm"></div>
+
+    <div class="run-js-button-container">
+      <button id="run-js-button">Click to Activate Heavy JavaScript</button>
+    </div>
+
+    <script type="text/javascript">
+      document.getElementById('run-js-button').addEventListener('click', () => {
+        setInterval(() => {
+          const now = performance.now();
+
+          while (now + 500 > performance.now()) {
+            /* Do nothing */
+          }
+        }, 500)
+      });
+    </script>
     <script type="module">
       var animation = bodymovin.loadAnimation({
         container: document.getElementById("bm"),

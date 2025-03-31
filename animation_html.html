@@ -80,5 +80,21 @@
         <div class="circle circle-4"></div>
         <div class="circle circle-5"></div>
       </div>
+
+    <div class="run-js-button-container">
+      <button id="run-js-button">Click to Activate Heavy JavaScript</button>
+    </div>
+
+    <script type="text/javascript">
+      document.getElementById('run-js-button').addEventListener('click', () => {
+        setInterval(() => {
+          const now = performance.now();
+
+          while (now + 500 > performance.now()) {
+            /* Do nothing */
+          }
+        }, 500)
+      });
+    </script>
 </body>
 </html>

@@ -21,18 +21,54 @@
 
     <div class="run-js-button-container">
       <button id="run-js-button">Click to Activate Heavy JavaScript</button>
+      <div id="fetch-results"></div>
     </div>
 
     <script type="text/javascript">
-      document.getElementById('run-js-button').addEventListener('click', () => {
-        setInterval(() => {
-          const now = performance.now();
+          document.getElementById("run-js-button").addEventListener("click", async () => {
+                const resultsEl = document.getElementById("fetch-results");
+                resultsEl.innerHTML = "Running fetch test...";
 
-          while (now + 500 > performance.now()) {
-            /* Do nothing */
-          }
-        }, 500)
-      });
+                const startTime = performance.now();
+                const times = [];
+
+                // Perform 10 fetches
+                for (let i = 0; i < 1000; i++) {
+                  const fetchStart = performance.now();
+
+                  try {
+                    const response = await fetch("animation.json").then((res) => {
+                      return res; // Added return statement to resolve the promise
+                    });
+                    const data = await response.json();
+                    const fetchEnd = performance.now();
+
+                    times.push(fetchEnd - fetchStart);
+
+                    // Update progress
+                    resultsEl.innerHTML = `Completed ${i + 1}/1000 fetches...`;
+                  } catch (error) {
+                    resultsEl.innerHTML = `Error during fetch: ${error.message}`;
+                    return;
+                  }
+                }
+
+                const totalTime = performance.now() - startTime;
+
+                // Calculate statistics
+                const avgTime = totalTime / 1000;
+                const minTime = Math.min(...times);
+                const maxTime = Math.max(...times);
+
+                // Display results
+                resultsEl.innerHTML = `
+        <h3>Fetch Test Results:</h3>
+        <p>Total time: ${totalTime.toFixed(2)}ms</p>
+        <p>Average time per fetch: ${avgTime.toFixed(2)}ms</p>
+        <p>Fastest fetch: ${minTime.toFixed(2)}ms</p>
+        <p>Slowest fetch: ${maxTime.toFixed(2)}ms</p>
+      `;
+          });
     </script>
     <script type="module">
       var animation = bodymovin.loadAnimation({

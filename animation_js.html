@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Animation - JS</title>
+    <style>
+      .loader-container {
+        width: 500px;
+        height: 500px;
+        position: relative;
+      }
+
+      .circle {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        border-radius: 50%;
+        background: #00baff;
+        transform-origin: center;
+        transform: translateY(-100px);
+      }
+
+      .circle-1 {
+        width: 50px;
+        height: 50px;
+        margin: -25px 0 0 -25px;
+      }
+
+      .circle-2 {
+        width: 40px;
+        height: 40px;
+        margin: -20px 0 0 -20px;
+      }
+
+      .circle-3 {
+        width: 30px;
+        height: 30px;
+        margin: -15px 0 0 -15px;
+      }
+
+      .circle-4 {
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+      }
+
+      .circle-5 {
+        width: 10px;
+        height: 10px;
+        margin: -5px 0 0 -5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loader-container">
+      <div class="circle circle-1"></div>
+      <div class="circle circle-2"></div>
+      <div class="circle circle-3"></div>
+      <div class="circle circle-4"></div>
+      <div class="circle circle-5"></div>
+    </div>
+
+    <script>
+      // Create animation for each circle using Web Animations API
+      document.querySelectorAll('.circle').forEach((circle, index) => {
+        // Match the CSS delays exactly: 0, 0.083s, 0.167s, 0.25s, 0.333s
+        const delays = [0, 0.083, 0.167, 0.25, 0.333];
+        const delay = delays[index];
+        
+        // Animation duration
+        const duration = 1770;
+        
+        // Animation keyframes - reduced the pause at the start
+        const keyframes = [
+          { transform: 'rotate(0deg) translateY(-100px)', offset: 0 },
+          { transform: 'rotate(360deg) translateY(-100px)', offset: 0.75 }
+        ];
+        
+        // Animation options
+        const options = {
+          duration: duration,
+          iterations: Infinity,
+          easing: 'ease-in-out',
+          delay: delay * 1000 // Convert to milliseconds
+        };
+        
+        // Start the animation
+        circle.animate(keyframes, options);
+      });
+    </script>
+  </body>
+</html>

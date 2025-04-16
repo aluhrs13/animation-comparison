@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Animation - SVG</title>
+    <style>
+      .loader-container {
+        width: 500px;
+        height: 500px;
+        position: relative;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loader-container">
+      <svg width="500" height="500" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+        <!-- Circle 1 (largest) - Changed y position from 100 to 150 (100px from center at 250) -->
+        <circle cx="250" cy="150" r="25" fill="#00baff">
+          <animateTransform 
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            from="0 250 250"
+            to="360 250 250"
+            dur="1.77s"
+            begin="0s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keyTimes="0; 0.857; 1"
+            keySplines="0.42 0 0.58 1; 0.42 0 0.58 1" />
+        </circle>
+        
+        <!-- Circle 2 - Changed y position from 100 to 150 -->
+        <circle cx="250" cy="150" r="20" fill="#00baff">
+          <animateTransform 
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            from="0 250 250"
+            to="360 250 250"
+            dur="1.77s"
+            begin="0.083s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keyTimes="0; 0.857; 1"
+            keySplines="0.42 0 0.58 1; 0.42 0 0.58 1" />
+        </circle>
+        
+        <!-- Circle 3 - Changed y position from 100 to 150 -->
+        <circle cx="250" cy="150" r="15" fill="#00baff">
+          <animateTransform 
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            from="0 250 250"
+            to="360 250 250"
+            dur="1.77s"
+            begin="0.167s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keyTimes="0; 0.857; 1"
+            keySplines="0.42 0 0.58 1; 0.42 0 0.58 1" />
+        </circle>
+        
+        <!-- Circle 4 - Changed y position from 100 to 150 -->
+        <circle cx="250" cy="150" r="10" fill="#00baff">
+          <animateTransform 
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            from="0 250 250"
+            to="360 250 250"
+            dur="1.77s"
+            begin="0.25s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keyTimes="0; 0.857; 1"
+            keySplines="0.42 0 0.58 1; 0.42 0 0.58 1" />
+        </circle>
+        
+        <!-- Circle 5 (smallest) - Changed y position from 100 to 150 -->
+        <circle cx="250" cy="150" r="5" fill="#00baff">
+          <animateTransform 
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            from="0 250 250"
+            to="360 250 250"
+            dur="1.77s"
+            begin="0.333s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keyTimes="0; 0.857; 1"
+            keySplines="0.42 0 0.58 1; 0.42 0 0.58 1" />
+        </circle>
+      </svg>
+    </div>
+  </body>
+</html>

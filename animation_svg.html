@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0" />
     <title>Animation - SVG</title>
-    <style>
+        <style>
       .loader-container {
         width: 500px;
         height: 500px;
@@ -98,5 +98,11 @@
         </circle>
       </svg>
     </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        performance.mark("SVG Animation");
+      });
+    </script>
   </body>
 </html>

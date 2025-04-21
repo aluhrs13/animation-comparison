@@ -23,6 +23,12 @@
       <canvas id="animationCanvas" width="500" height="500"></canvas>
     </div>
 
+      <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        performance.mark("3D Canvas Animation");
+      });
+    </script>
+
     <script>
       // Get the WebGL canvas context
       const canvas = document.getElementById('animationCanvas');

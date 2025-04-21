@@ -24,6 +24,12 @@
     </div>
 
     <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        performance.mark("Canvas Animation");
+      });
+    </script>
+
+    <script>
       // Get the canvas and its context
       const canvas = document.getElementById('animationCanvas');
       const ctx = canvas.getContext('2d');

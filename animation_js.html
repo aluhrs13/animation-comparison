@@ -5,96 +5,116 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0" />
-    <title>Animation - JS</title>
-        <style>
+    <title>Animation - GSAP</title>
+    <!-- Adding GSAP library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
       .loader-container {
         width: 500px;
         height: 500px;
         position: relative;
       }
 
+      .orbit-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+      }
+
       .circle {
         position: absolute;
-        left: 50%;
-        top: 50%;
         border-radius: 50%;
         background: #00baff;
-        transform-origin: center;
         transform: translateY(-100px);
       }
 
       .circle-1 {
         width: 50px;
         height: 50px;
-        margin: -25px 0 0 -25px;
+        margin-left: -25px;
+        margin-top: -25px;
       }
 
       .circle-2 {
         width: 40px;
         height: 40px;
-        margin: -20px 0 0 -20px;
+        margin-left: -20px;
+        margin-top: -20px;
       }
 
       .circle-3 {
         width: 30px;
         height: 30px;
-        margin: -15px 0 0 -15px;
+        margin-left: -15px;
+        margin-top: -15px;
       }
 
       .circle-4 {
         width: 20px;
         height: 20px;
-        margin: -10px 0 0 -10px;
+        margin-left: -10px;
+        margin-top: -10px;
       }
 
       .circle-5 {
         width: 10px;
         height: 10px;
-        margin: -5px 0 0 -5px;
+        margin-left: -5px;
+        margin-top: -5px;
       }
     </style>
   </head>
   <body>
     <div class="loader-container">
-      <div class="circle circle-1"></div>
-      <div class="circle circle-2"></div>
-      <div class="circle circle-3"></div>
-      <div class="circle circle-4"></div>
-      <div class="circle circle-5"></div>
+      <div class="orbit-container">
+        <div class="circle circle-1"></div>
+      </div>
+      <div class="orbit-container">
+        <div class="circle circle-2"></div>
+      </div>
+      <div class="orbit-container">
+        <div class="circle circle-3"></div>
+      </div>
+      <div class="orbit-container">
+        <div class="circle circle-4"></div>
+      </div>
+      <div class="orbit-container">
+        <div class="circle circle-5"></div>
+      </div>
     </div>
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         performance.mark("JS Animation");
-      });
-    </script>
 
-    <script>
-      // Create animation for each circle using Web Animations API
-      document.querySelectorAll('.circle').forEach((circle, index) => {
-        // Match the CSS delays exactly: 0, 0.083s, 0.167s, 0.25s, 0.333s
+        // Animation configuration
+        const orbitContainers = document.querySelectorAll('.orbit-container');
         const delays = [0, 0.083, 0.167, 0.25, 0.333];
-        const delay = delays[index];
+        const duration = 1.77; // 1.77 seconds
         
-        // Animation duration
-        const duration = 1770;
-        
-        // Animation keyframes - reduced the pause at the start
-        const keyframes = [
-          { transform: 'rotate(0deg) translateY(-100px)', offset: 0 },
-          { transform: 'rotate(360deg) translateY(-100px)', offset: 0.75 }
-        ];
-        
-        // Animation options
-        const options = {
-          duration: duration,
-          iterations: Infinity,
-          easing: 'ease-in-out',
-          delay: delay * 1000 // Convert to milliseconds
-        };
-        
-        // Start the animation
-        circle.animate(keyframes, options);
+        // Animate each container with the appropriate delay
+        orbitContainers.forEach((container, index) => {
+          // Create the timeline for this circle
+          const tl = gsap.timeline({
+            repeat: -1,
+            delay: delays[index]
+          });
+          
+          // First 85.7% of the animation - rotate from 0 to 360 degrees
+          tl.to(container, {
+            duration: duration * 0.857,
+            rotation: 360,
+            ease: "power1.inOut"
+          })
+          // Remaining 14.3% - pause at the final position
+          .to(container, {
+            duration: duration * 0.143,
+            rotation: 360,
+            ease: "none"
+          });
+        });
       });
     </script>
   </body>

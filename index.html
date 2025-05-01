@@ -83,6 +83,53 @@
             <h2><a href="animation_canvas3d.html">3D Canvas Animation</a></h2>
             <iframe src="animation_canvas3d.html"></iframe>
         </div>
+        <div class="iframe-wrapper">
+            <h2><a href="animation_gif.html">GIF</a></h2>
+            <iframe src="animation_gif.html"></iframe>
+        </div>
     </div>
+
+    <script>
+
+    function doJank(time=200) {
+        let start = performance.now();
+        let now = performance.now();
+        performance.mark("Start Jank");
+        while((now - start) < time) { now = performance.now(); }
+        performance.mark("End Jank");
+        performance.measure("Jank",
+                            "Start Jank",
+                            "End Jank");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        interval = null;
+
+        const button = document.createElement("button");
+        button.textContent = "Start Jank";
+        button.style.margin = "20px";
+        button.style.padding = "10px 20px";
+        button.style.fontSize = "16px";
+        button.style.cursor = "pointer";
+        button.setAttribute("data-state", "start");
+
+        button.addEventListener("click", () => {
+            state = button.getAttribute("data-state") === "start";
+            if (state) {
+                interval = setInterval(function() {
+                    doJank(200);
+                }, 500);
+                button.textContent = "Stop Jank";
+                button.setAttribute("data-state", "stop");
+            } else {
+                clearInterval(interval);
+                button.textContent = "Start Jank";
+            }
+            button.setAttribute("data-state", state ? "stop" : "start");
+        });
+
+        document.body.insertBefore(button, document.querySelector(".iframe-container"));
+    });
+    </script>
 </body>
 </html>

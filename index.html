@@ -59,6 +59,10 @@
             <h2><a href="animation_css.html">CSS Animation</a></h2>
             <iframe src="animation_css.html"></iframe>
         </div>
+                <div class="iframe-wrapper">
+            <h2><a href="animation_css_variable.html">CSS Animation W/ Variable</a></h2>
+            <iframe src="animation_css_variable.html"></iframe>
+        </div>
         <div class="iframe-wrapper">
             <h2><a href="animation_svg.html">SVG Animation</a></h2>
             <iframe src="animation_svg.html"></iframe>
@@ -117,7 +121,7 @@
             state = button.getAttribute("data-state") === "start";
             if (state) {
                 interval = setInterval(function() {
-                    doJank(200);
+                    doJank(400);
                 }, 500);
                 button.textContent = "Stop Jank";
                 button.setAttribute("data-state", "stop");

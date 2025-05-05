@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Animation - CSS</title>
+    <style>
+      :root{
+        --translation-amt: -100px;
+        --animation-duration: 1.77s;
+      }
+
+      .loader-container {
+        width: 500px;
+        height: 500px;
+        position: relative;
+      }
+
+      .circle {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        border-radius: 50%;
+        background: #00baff;
+        transform-origin: center;
+        transform: translateY(-100px);
+      }
+
+      .circle-1 {
+        width: 50px;
+        height: 50px;
+        margin: -25px 0 0 -25px;
+        animation: rotate var(--animation-duration) ease-in-out infinite;
+        animation-delay: 0s;
+      }
+
+      .circle-2 {
+        width: 40px;
+        height: 40px;
+        margin: -20px 0 0 -20px;
+        animation: rotate var(--animation-duration) ease-in-out infinite;
+        animation-delay: 0.083s;
+      }
+
+      .circle-3 {
+        width: 30px;
+        height: 30px;
+        margin: -15px 0 0 -15px;
+        animation: rotate var(--animation-duration) ease-in-out infinite;
+        animation-delay: 0.167s;
+      }
+
+      .circle-4 {
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+        animation: rotate var(--animation-duration) ease-in-out infinite;
+        animation-delay: 0.25s;
+      }
+
+      .circle-5 {
+        width: 10px;
+        height: 10px;
+        margin: -5px 0 0 -5px;
+        animation: rotate var(--animation-duration) ease-in-out infinite;
+        animation-delay: 0.333s;
+      }
+
+      /* 85.7% is to give a pause at the top */
+      @keyframes rotate {
+        0%,
+        85.7% {
+          transform: rotate(0deg) translateY(var(--translation-amt));
+        }
+        85.7%,
+        100% {
+          transform: rotate(360deg) translateY(var(--translation-amt));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loader-container">
+      <div class="circle circle-1"></div>
+      <div class="circle circle-2"></div>
+      <div class="circle circle-3"></div>
+      <div class="circle circle-4"></div>
+      <div class="circle circle-5"></div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        performance.mark("CSS Animation");
+      });
+    </script>
+  </body>
+</html>

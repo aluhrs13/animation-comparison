@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Animation - Web Animations API</title>
+    <style>
+      .loader-container {
+        width: 500px;
+        height: 500px;
+        position: relative;
+      }
+
+      .orbit-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+      }
+
+      .circle {
+        position: absolute;
+        border-radius: 50%;
+        background: #00baff;
+        transform: translateY(-100px);
+      }
+
+      .circle-1 {
+        width: 50px;
+        height: 50px;
+        margin-left: -25px;
+        margin-top: -25px;
+      }
+
+      .circle-2 {
+        width: 40px;
+        height: 40px;
+        margin-left: -20px;
+        margin-top: -20px;
+      }
+
+      .circle-3 {
+        width: 30px;
+        height: 30px;
+        margin-left: -15px;
+        margin-top: -15px;
+      }
+
+      .circle-4 {
+        width: 20px;
+        height: 20px;
+        margin-left: -10px;
+        margin-top: -10px;
+      }
+
+      .circle-5 {
+        width: 10px;
+        height: 10px;
+        margin-left: -5px;
+        margin-top: -5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loader-container">
+      <div class="orbit-container">
+        <div class="circle circle-1"></div>
+      </div>
+      <div class="orbit-container">
+        <div class="circle circle-2"></div>
+      </div>
+      <div class="orbit-container">
+        <div class="circle circle-3"></div>
+      </div>
+      <div class="orbit-container">
+        <div class="circle circle-4"></div>
+      </div>
+      <div class="orbit-container">
+        <div class="circle circle-5"></div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        performance.mark("WAAPI Animation");
+
+        const orbitContainers = document.querySelectorAll('.orbit-container');
+        const delays = [0, 0.083, 0.167, 0.25, 0.333];
+        const duration = 1770;
+        
+        orbitContainers.forEach((container, index) => {
+          const keyframes = [
+            { transform: 'rotate(0deg)' },
+            { transform: 'rotate(360deg)', offset: 0.857 }, 
+            { transform: 'rotate(360deg)' }
+          ];
+          
+          const timing = {
+            duration: duration,
+            delay: delays[index] * 1000,
+            iterations: Infinity,
+            easing: 'cubic-bezier(0.42, 0, 0.58, 1)'
+          };
+          
+          const animation = container.animate(keyframes, timing);
+        });
+      });
+    </script>
+  </body>
+</html>

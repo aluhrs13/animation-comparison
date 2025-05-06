@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Animation - OffscreenCanvas</title>
+    <style>
+      .loader-container {
+        width: 500px;
+        height: 500px;
+        position: relative;
+      }
+      
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loader-container">
+      <canvas id="animationCanvas" width="500" height="500"></canvas>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        performance.mark("Canvas Animation");
+      });
+    </script>
+
+    <script>
+      // Get the canvas and transfer its control to an offscreen canvas
+      const canvas = document.getElementById('animationCanvas');
+      
+      // Check if OffscreenCanvas is supported
+      if ('OffscreenCanvas' in window) {
+        // Transfer canvas to a worker
+        const offscreen = canvas.transferControlToOffscreen();
+        
+        // Create a worker
+        const worker = new Worker(URL.createObjectURL(new Blob([`
+          // Worker code
+          let ctx;
+          let animationFrameId;
+
+          // Configuration
+          const circles = [
+            { radius: 25, delay: 0, color: '#00baff' },
+            { radius: 20, delay: 0.083, color: '#00baff' },
+            { radius: 15, delay: 0.167, color: '#00baff' },
+            { radius: 10, delay: 0.25, color: '#00baff' },
+            { radius: 5, delay: 0.333, color: '#00baff' }
+          ];
+
+          const animationDuration = 1770; // 1.77s in milliseconds
+          const rotationStart = 100-85.7; // Percentage where rotation begins
+
+          // Easing function: ease-in-out
+          function easeInOutQuad(t) {
+            return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+          }
+
+          // Animation loop
+          function animate() {
+            // Clear the canvas
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+            // Center point
+            const centerX = ctx.canvas.width / 2;
+            const centerY = ctx.canvas.height / 2;
+            const orbitRadius = 100; // Distance from center = 100px
+
+            // Get current time
+            const currentTime = performance.now();
+
+            // Draw each circle
+            circles.forEach(circle => {
+              // Calculate animation progress for this circle (accounting for delay)
+              const delayedTime = (currentTime - (circle.delay * 1000));
+              const timeOffset = delayedTime % animationDuration;
+              const progress = timeOffset / animationDuration * 100;
+
+              // Calculate angle
+              let angle = 0;
+              if (progress > rotationStart) {
+                // Map remaining percentage (rotationStart to 100%) to full rotation (0 to 360 degrees)
+                const normalizedProgress = (progress - rotationStart) / (100 - rotationStart);
+                // Apply ease-in-out to match CSS animation
+                const easedProgress = easeInOutQuad(normalizedProgress);
+                angle = easedProgress * 360 * Math.PI / 180;
+              }
+
+              // Calculate position (start at top, rotate clockwise)
+              const x = centerX + Math.sin(angle) * orbitRadius;
+              const y = centerY - Math.cos(angle) * orbitRadius; // Negative because Y increases downward
+
+              // Draw the circle
+              ctx.beginPath();
+              ctx.arc(x, y, circle.radius, 0, Math.PI * 2);
+              ctx.fillStyle = circle.color;
+              ctx.fill();
+            });
+
+            // Request next frame
+            animationFrameId = requestAnimationFrame(animate);
+          }
+
+          // Listen for messages from the main thread
+          self.onmessage = function(event) {
+            if (event.data.canvas) {
+              // Get the canvas from the main thread
+              const canvas = event.data.canvas;
+              ctx = canvas.getContext('2d');
+              
+              // Start the animation
+              animate();
+            }
+            
+            if (event.data.type === 'terminate') {
+              cancelAnimationFrame(animationFrameId);
+              self.close();
+            }
+          };
+        `], {type: 'application/javascript'})));
+
+        // Pass the offscreen canvas to the worker
+        worker.postMessage({ canvas: offscreen }, [offscreen]);
+        
+        // Clean up on page unload
+        window.addEventListener('unload', () => {
+          worker.postMessage({ type: 'terminate' });
+        });
+      }
+    </script>
+  </body>
+</html>

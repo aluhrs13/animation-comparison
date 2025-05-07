@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Animation - CSS</title>
+    <style>
+      .loader-container {
+        width: 500px;
+        height: 500px;
+        position: relative;
+      }
+
+      .circle {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        border-radius: 50%;
+        background: #00baff;
+        transform-origin: center;
+        transform: translateY(-100px);
+      }
+
+      .circle-1 {
+        width: 50px;
+        height: 50px;
+        margin: -25px 0 0 -25px;
+        animation: rotate 1.77s ease-in-out infinite;
+        animation-delay: 0s;
+      }
+
+      .circle-2 {
+        width: 40px;
+        height: 40px;
+        margin: -20px 0 0 -20px;
+        animation: rotate 1.77s ease-in-out infinite;
+        animation-delay: 0.083s;
+      }
+
+      .circle-3 {
+        width: 30px;
+        height: 30px;
+        margin: -15px 0 0 -15px;
+        animation: rotate 1.77s ease-in-out infinite;
+        animation-delay: 0.167s;
+      }
+
+      .circle-4 {
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+        animation: rotate 1.77s ease-in-out infinite;
+        animation-delay: 0.25s;
+      }
+
+      .circle-5 {
+        width: 10px;
+        height: 10px;
+        margin: -5px 0 0 -5px;
+        animation: rotate 1.77s ease-in-out infinite;
+        animation-delay: 0.333s;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loader-container">
+      <div class="circle circle-1"></div>
+      <div class="circle circle-2"></div>
+      <div class="circle circle-3"></div>
+      <div class="circle circle-4"></div>
+      <div class="circle circle-5"></div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        performance.mark("No Animation");
+      });
+    </script>
+  </body>
+</html>

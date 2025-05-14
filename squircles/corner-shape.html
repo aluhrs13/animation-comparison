@@ -1,19 +1,23 @@
 <html>
 <head>
     <style>
-        #squircle {
+        :root{
+            --borderradius: 100px;
+        }
+        .squircle {
             width: 50%;
             margin-left:auto;
             margin-right:auto;
+            place-content: center;
+            text-align: center;
             aspect-ratio: 1 / 1;
             background-color: rebeccapurple;
-            corner-shape: squircle;
-            border-radius: 100px;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <div id="squircle"></div>
+    <div class="squircle" style="border-radius: var(--borderradius); corner-shape: squircle;" >Hello World</div>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
           performance.mark("Corner Shape");

@@ -44,18 +44,17 @@
               backgroundColor: '#00baff',
               margin: `-${radius}px 0 0 -${radius}px`,
               transformOrigin: 'center',
+              translateY: '-100px'
             }}
-            initial={{ y: -100, rotate: 0 }}
             animate={{ 
-              y: -100,
-              rotate: [0, 0, 360] 
+              rotate: [0, 0, 360]
             }}
             transition={{
               repeat: Infinity,
               delay: delay,
               duration: 1.77,
               times: [0, 0.857, 1],
-              ease: ["easeInOut", "easeInOut"]
+              ease: ["linear", "easeInOut"]
             }}
           />
         );

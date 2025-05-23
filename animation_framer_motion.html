@@ -43,11 +43,11 @@
               borderRadius: '50%',
               backgroundColor: '#00baff',
               margin: `-${radius}px 0 0 -${radius}px`,
-              transformOrigin: 'center',
-              translateY: '-100px'
+              transformOrigin: 'center'
             }}
             animate={{ 
-              rotate: [0, 0, 360]
+              rotate: [0, 0, 360],
+              y: [-100, -100, -100]
             }}
             transition={{
               repeat: Infinity,

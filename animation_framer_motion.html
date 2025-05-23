@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Animation - Framer Motion</title>
+    <!-- React and React DOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Framer Motion -->
+    <script crossorigin src="https://unpkg.com/framer-motion@10/dist/framer-motion.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      .loader-container {
+        width: 500px;
+        height: 500px;
+        position: relative;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" class="loader-container"></div>
+
+    <script type="text/babel">
+      // Access the motion component from Framer Motion
+      const { motion } = window.Motion;
+      
+      // Circle component
+      const Circle = ({ size, delay }) => {
+        const radius = size / 2;
+        
+        return (
+          <motion.div
+            style={{
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              width: `${size}px`,
+              height: `${size}px`,
+              borderRadius: '50%',
+              backgroundColor: '#00baff',
+              margin: `-${radius}px 0 0 -${radius}px`,
+              transformOrigin: 'center',
+            }}
+            initial={{ y: -100, rotate: 0 }}
+            animate={{ 
+              y: -100,
+              rotate: [0, 0, 360] 
+            }}
+            transition={{
+              repeat: Infinity,
+              delay: delay,
+              duration: 1.77,
+              times: [0, 0.857, 1],
+              ease: ["easeInOut", "easeInOut"]
+            }}
+          />
+        );
+      };
+      
+      // Main App component
+      const App = () => {
+        React.useEffect(() => {
+          performance.mark("Framer Motion Animation");
+        }, []);
+        
+        return (
+          <>
+            <Circle size={50} delay={0} />
+            <Circle size={40} delay={0.083} />
+            <Circle size={30} delay={0.167} />
+            <Circle size={20} delay={0.25} />
+            <Circle size={10} delay={0.333} />
+          </>
+        );
+      };
+      
+      // Render the React component
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<App />);
+    </script>
+  </body>
+</html>

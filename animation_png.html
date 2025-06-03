@@ -5,9 +5,7 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0" />
-    <title>Lottie animation</title>
-    <script src="/lib/lottie.min.js"></script>
-
+    <title>PNG animation</title>
     <style>
       :root {
         --page-padding: 24px;
@@ -43,29 +41,50 @@
       div {
         position: absolute;
       }
-
       #container {
         width: 480px;
         height: 480px;
         background-color: var(--bg-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
       }
     </style>
   </head>
 
   <body>
-    <div id="container"></div>
-
+    <div id="container">
+      <img
+        src="assets/PNG/Light/Combined/Combined_01_00000.png"
+        alt="Loading animation" />
+    </div>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        performance.mark("Lottie Animation");
+        performance.mark("PNG Animation");
 
-        var animation = bodymovin.loadAnimation({
-          container: document.getElementById("container"),
-          renderer: "svg",
-          loop: true,
-          autoplay: true,
-          path: "/assets/Lottie/Light/Combined_01.json",
-        });
+        const img = document.querySelector("img");
+        const totalFrames = 173;
+        let currentFrame = 0;
+        const frameRate = 15;
+        const frameDuration = 1000 / frameRate;
+
+        function updateFrame() {
+          const frameNumber = currentFrame.toString().padStart(5, "0");
+          const imagePath = `assets/PNG/Light/Combined/Combined_01_${frameNumber}.png`;
+
+          img.src = imagePath;
+
+          currentFrame = (currentFrame + 1) % totalFrames;
+        }
+
+        updateFrame();
+        setInterval(updateFrame, frameDuration);
       });
     </script>
   </body>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loop 01 - Example SMIL animation</title>
+  <style>
+    :root {
+      --page-padding: 24px;
+      --bg-color: white;
+      --theme-100: #FFF1E6;
+      --theme-200: #FFEBD4;
+      --theme-300: #FFE4C4;
+      --theme-400: #FFDDB4;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-color: #1f1f1f;
+        --theme-100: #C8913E;
+        --theme-200: #BC8634;
+        --theme-300: #B68130;
+        --theme-400: #A57221;
+      }
+    }
+
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: var(--page-padding);
+      background-color: var(--bg-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #container {
+      width: 480px;
+      height: 480px;
+    }
+  </style>  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      performance.mark("SVG+SMIL Animation");
+    });
+  </script>
+</head>
+
+<body>
+  <div id="container">
+    <svg width="480" height="480" viewBox="0 0 480 480">
+      <!-- Background (optional, can be removed if not needed) -->
+      <rect width="480" height="480" fill="var(--bg-color)"/>
+      
+      <!-- Page background -->
+      <rect x="96" y="48" width="288" height="384" rx="24" ry="24" fill="var(--theme-200)"/>
+      
+      <!-- Define the shimmer gradient -->
+      <defs>
+        <linearGradient id="shimmerGradient" gradientUnits="objectBoundingBox">
+          <stop offset="0%" stop-color="var(--bg-color)" stop-opacity="0"/>
+          <stop offset="40%" stop-color="var(--bg-color)" stop-opacity="0.25"/>
+          <stop offset="60%" stop-color="var(--bg-color)" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="var(--bg-color)" stop-opacity="0"/>
+        </linearGradient>
+        
+        <!-- Clipping paths for each line -->
+        <clipPath id="clip1">
+          <rect x="120" y="72" width="108" height="24" rx="12" ry="12"/>
+        </clipPath>
+        <clipPath id="clip2">
+          <rect x="120" y="120" width="168" height="24" rx="12" ry="12"/>
+        </clipPath>
+        <clipPath id="clip3">
+          <rect x="120" y="192" width="240" height="24" rx="12" ry="12"/>
+        </clipPath>
+        <clipPath id="clip4">
+          <rect x="120" y="240" width="240" height="24" rx="12" ry="12"/>
+        </clipPath>
+        <clipPath id="clip5">
+          <rect x="120" y="288" width="240" height="24" rx="12" ry="12"/>
+        </clipPath>
+        <clipPath id="clip6">
+          <rect x="120" y="336" width="240" height="24" rx="12" ry="12"/>
+        </clipPath>
+      </defs>
+        <!-- Line 1 -->
+      <rect x="120" y="72" width="108" height="24" rx="12" ry="12" fill="var(--theme-400)"/>
+      <rect class="shimmer" x="120" y="72" width="108" height="24" fill="url(#shimmerGradient)" clip-path="url(#clip1)">
+        <animateTransform
+          attributeName="transform"
+          type="translate"
+          values="-108,0; 108,0; -108,0"
+          dur="2s"
+          repeatCount="indefinite"/>
+      </rect>
+      
+      <!-- Line 2 -->
+      <rect x="120" y="120" width="168" height="24" rx="12" ry="12" fill="var(--theme-400)"/>
+      <rect class="shimmer" x="120" y="120" width="168" height="24" fill="url(#shimmerGradient)" clip-path="url(#clip2)">
+        <animateTransform
+          attributeName="transform"
+          type="translate"
+          values="-168,0; 168,0; -168,0"
+          dur="2s"
+          repeatCount="indefinite"/>
+      </rect>
+      
+      <!-- Line 3 -->
+      <rect x="120" y="192" width="240" height="24" rx="12" ry="12" fill="var(--theme-400)"/>
+      <rect class="shimmer" x="120" y="192" width="240" height="24" fill="url(#shimmerGradient)" clip-path="url(#clip3)">
+        <animateTransform
+          attributeName="transform"
+          type="translate"
+          values="-240,0; 240,0; -240,0"
+          dur="2s"
+          repeatCount="indefinite"/>
+      </rect>
+      
+      <!-- Line 4 -->
+      <rect x="120" y="240" width="240" height="24" rx="12" ry="12" fill="var(--theme-400)"/>
+      <rect class="shimmer" x="120" y="240" width="240" height="24" fill="url(#shimmerGradient)" clip-path="url(#clip4)">
+        <animateTransform
+          attributeName="transform"
+          type="translate"
+          values="-240,0; 240,0; -240,0"
+          dur="2s"
+          repeatCount="indefinite"/>
+      </rect>
+      
+      <!-- Line 5 -->
+      <rect x="120" y="288" width="240" height="24" rx="12" ry="12" fill="var(--theme-400)"/>
+      <rect class="shimmer" x="120" y="288" width="240" height="24" fill="url(#shimmerGradient)" clip-path="url(#clip5)">
+        <animateTransform
+          attributeName="transform"
+          type="translate"
+          values="-240,0; 240,0; -240,0"
+          dur="2s"
+          repeatCount="indefinite"/>
+      </rect>
+      
+      <!-- Line 6 -->
+      <rect x="120" y="336" width="240" height="24" rx="12" ry="12" fill="var(--theme-400)"/>
+      <rect class="shimmer" x="120" y="336" width="240" height="24" fill="url(#shimmerGradient)" clip-path="url(#clip6)">
+        <animateTransform
+          attributeName="transform"
+          type="translate"
+          values="-240,0; 240,0; -240,0"
+          dur="2s"
+          repeatCount="indefinite"/>
+      </rect>
+    </svg>
+  </div>
+</body>
+
+</html>

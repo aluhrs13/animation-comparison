@@ -5,22 +5,57 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0" />
-    <title>Animation - OffscreenCanvas</title>
+    <title>Offscreen Canvas animation</title>
     <style>
-      .loader-container {
-        width: 500px;
-        height: 500px;
-        position: relative;
+      :root {
+        --page-padding: 24px;
+        --bg-color: white;
+        --theme-100: #fff1e6;
+        --theme-200: #ffebd4;
+        --theme-300: #ffe4c4;
+        --theme-400: #ffddb4;
+        --open-curve: cubic-bezier(0.75, 0, 0.25, 1);
       }
-      
-      canvas {
-        display: block;
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-color: #1f1f1f;
+          --theme-100: #c8913e;
+          --theme-200: #bc8634;
+          --theme-300: #b68130;
+          --theme-400: #a57221;
+        }
+      }
+
+      body {
+        box-sizing: border-box;
+        margin: 0;
+        padding: var(--page-padding);
+        background-color: var(--bg-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      div {
+        position: absolute;
+      }
+
+      #container {
+        width: 480px;
+        height: 480px;
+        background-color: var(--bg-color);
       }
     </style>
   </head>
+
   <body>
-    <div class="loader-container">
-      <canvas id="animationCanvas" width="500" height="500"></canvas>
+    <div class="container">
+      <canvas
+        id="animationCanvas"
+        width="500"
+        height="500"></canvas>
     </div>
 
     <script>
@@ -31,15 +66,19 @@
 
     <script>
       // Get the canvas and transfer its control to an offscreen canvas
-      const canvas = document.getElementById('animationCanvas');
-      
+      const canvas = document.getElementById("animationCanvas");
+
       // Check if OffscreenCanvas is supported
-      if ('OffscreenCanvas' in window) {
+      if ("OffscreenCanvas" in window) {
         // Transfer canvas to a worker
         const offscreen = canvas.transferControlToOffscreen();
-        
+
         // Create a worker
-        const worker = new Worker(URL.createObjectURL(new Blob([`
+        const worker = new Worker(
+          URL.createObjectURL(
+            new Blob(
+              [
+                `
           // Worker code
           let ctx;
           let animationFrameId;
@@ -122,14 +161,19 @@
               self.close();
             }
           };
-        `], {type: 'application/javascript'})));
+        `,
+              ],
+              { type: "application/javascript" }
+            )
+          )
+        );
 
         // Pass the offscreen canvas to the worker
         worker.postMessage({ canvas: offscreen }, [offscreen]);
-        
+
         // Clean up on page unload
-        window.addEventListener('unload', () => {
-          worker.postMessage({ type: 'terminate' });
+        window.addEventListener("unload", () => {
+          worker.postMessage({ type: "terminate" });
         });
       }
     </script>

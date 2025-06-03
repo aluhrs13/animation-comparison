@@ -5,72 +5,53 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0" />
-    <title>Animation - CSS</title>
+    <title>No animation</title>
     <style>
-      .loader-container {
-        width: 500px;
-        height: 500px;
-        position: relative;
+      :root {
+        --page-padding: 24px;
+        --bg-color: white;
+        --theme-100: #fff1e6;
+        --theme-200: #ffebd4;
+        --theme-300: #ffe4c4;
+        --theme-400: #ffddb4;
+        --open-curve: cubic-bezier(0.75, 0, 0.25, 1);
       }
 
-      .circle {
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-color: #1f1f1f;
+          --theme-100: #c8913e;
+          --theme-200: #bc8634;
+          --theme-300: #b68130;
+          --theme-400: #a57221;
+        }
+      }
+
+      body {
+        box-sizing: border-box;
+        margin: 0;
+        padding: var(--page-padding);
+        background-color: var(--bg-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      div {
         position: absolute;
-        left: 50%;
-        top: 50%;
-        border-radius: 50%;
-        background: #00baff;
-        transform-origin: center;
-        transform: translateY(-100px);
       }
 
-      .circle-1 {
-        width: 50px;
-        height: 50px;
-        margin: -25px 0 0 -25px;
-        animation: rotate 1.77s ease-in-out infinite;
-        animation-delay: 0s;
-      }
-
-      .circle-2 {
-        width: 40px;
-        height: 40px;
-        margin: -20px 0 0 -20px;
-        animation: rotate 1.77s ease-in-out infinite;
-        animation-delay: 0.083s;
-      }
-
-      .circle-3 {
-        width: 30px;
-        height: 30px;
-        margin: -15px 0 0 -15px;
-        animation: rotate 1.77s ease-in-out infinite;
-        animation-delay: 0.167s;
-      }
-
-      .circle-4 {
-        width: 20px;
-        height: 20px;
-        margin: -10px 0 0 -10px;
-        animation: rotate 1.77s ease-in-out infinite;
-        animation-delay: 0.25s;
-      }
-
-      .circle-5 {
-        width: 10px;
-        height: 10px;
-        margin: -5px 0 0 -5px;
-        animation: rotate 1.77s ease-in-out infinite;
-        animation-delay: 0.333s;
+      #container {
+        width: 480px;
+        height: 480px;
+        background-color: var(--bg-color);
       }
     </style>
   </head>
+
   <body>
-    <div class="loader-container">
-      <div class="circle circle-1"></div>
-      <div class="circle circle-2"></div>
-      <div class="circle circle-3"></div>
-      <div class="circle circle-4"></div>
-      <div class="circle circle-5"></div>
+    <div id="container">
     </div>
 
     <script>

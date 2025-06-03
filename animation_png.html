@@ -73,18 +73,23 @@
         let currentFrame = 0;
         const frameRate = 15;
         const frameDuration = 1000 / frameRate;
+        let lastTime = 0;
 
-        function updateFrame() {
-          const frameNumber = currentFrame.toString().padStart(5, "0");
-          const imagePath = `assets/PNG/Light/Combined/Combined_01_${frameNumber}.png`;
+        function updateFrame(currentTime) {
+          if (currentTime - lastTime >= frameDuration) {
+            const frameNumber = currentFrame.toString().padStart(5, "0");
+            const imagePath = `assets/PNG/Light/Combined/Combined_01_${frameNumber}.png`;
 
-          img.src = imagePath;
+            img.src = imagePath;
 
-          currentFrame = (currentFrame + 1) % totalFrames;
+            currentFrame = (currentFrame + 1) % totalFrames;
+            lastTime = currentTime;
+          }
+
+          requestAnimationFrame(updateFrame);
         }
 
-        updateFrame();
-        setInterval(updateFrame, frameDuration);
+        requestAnimationFrame(updateFrame);
       });
     </script>
   </body>

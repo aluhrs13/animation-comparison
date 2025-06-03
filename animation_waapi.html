@@ -1,113 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0" />
-    <title>Animation - Web Animations API</title>
-    <style>
-      .loader-container {
-        width: 500px;
-        height: 500px;
-        position: relative;
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WAAPI animation</title>
+  <style>
+    :root {
+      --page-padding: 24px;
+      --bg-color: white;
+      --theme-100: #FFF1E6;
+      --theme-200: #FFEBD4;
+      --theme-300: #FFE4C4;
+      --theme-400: #FFDDB4;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-color: #1f1f1f;
+        --theme-100: #C8913E;
+        --theme-200: #BC8634;
+        --theme-300: #B68130;
+        --theme-400: #A57221;
+      }
+    }
+
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: var(--page-padding);
+      background-color: var(--bg-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    div {
+      position: absolute;
+    }
+
+    #container {
+      width: 480px;
+      height: 480px;
+      background-color: var(--bg-color);
+    }
+
+    #fold-clip {
+      left: 96px;
+      top: 48px;
+      height: 384px;
+      width: 288px;
+      overflow: hidden;
+    }
+
+    #page {
+      width: 288px;
+      height: 384px;
+      background-color: var(--theme-200);
+      border-radius: 24px;
+
+      .line {
+        left: 24px;
+        height: 24px;
+        width: 240px;
+        border-radius: 12px;
+        background-color: var(--theme-400);
+        overflow: hidden;
+
+        .shimmer {
+          content: '';
+          position: absolute;
+          width: 480px;
+          height: 480px;
+          top: calc(50% - 240px);
+          left: calc(50% - 240px);
+          background-image: linear-gradient(to right,
+              transparent 0%,
+              var(--bg-color) 40%,
+              var(--bg-color) 60%,
+              transparent 100%);
+          rotate: 45deg;
+          opacity: 0.25;
+          transform: translateX(-100%);
+        }
       }
 
-      .orbit-container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
+      .line:nth-child(1) {
+        bottom: 312px;
+        width: 108px;
       }
 
-      .circle {
-        position: absolute;
-        border-radius: 50%;
-        background: #00baff;
-        transform: translateY(-100px);
+      .line:nth-child(2) {
+        bottom: 264px;
+        width: 168px;
       }
 
-      .circle-1 {
-        width: 50px;
-        height: 50px;
-        margin-left: -25px;
-        margin-top: -25px;
+      .line:nth-child(3) {
+        bottom: 192px;
       }
 
-      .circle-2 {
-        width: 40px;
-        height: 40px;
-        margin-left: -20px;
-        margin-top: -20px;
+      .line:nth-child(4) {
+        bottom: 144px;
       }
 
-      .circle-3 {
-        width: 30px;
-        height: 30px;
-        margin-left: -15px;
-        margin-top: -15px;
+      .line:nth-child(5) {
+        bottom: 96px;
       }
 
-      .circle-4 {
-        width: 20px;
-        height: 20px;
-        margin-left: -10px;
-        margin-top: -10px;
+      .line:nth-child(6) {
+        bottom: 48px;
+      }
+    }
+
+    #page-top {
+      width: 288px;
+      height: 144px;
+      background: linear-gradient(135deg, var(--theme-100), var(--theme-300));
+      border-radius: 8px 8px 24px 24px;
+    }
+  </style>
+  <script>
+    window.addEventListener('load', () => {
+      // Get elements
+      const shimmerEls = document.querySelectorAll('.shimmer');
+      const clipEl = document.querySelector('#fold-clip');
+      const pageEl = document.querySelector('#page');
+      const pageTopEl = document.querySelector('#page-top');
+
+      // Create animations for each element
+      const clipRotateAnimation = new Animation(
+        new KeyframeEffect(clipEl, [
+          { rotate: '-40deg' },
+          { rotate: '0deg' }
+        ], {
+          duration: 1000,
+          easing: 'cubic-bezier(.25, 1.5, .5, 1)',
+          fill: 'both'
+        })
+      );
+      const clipTranslateAnimation = new Animation(
+        new KeyframeEffect(clipEl, [
+          { translate: '0px 104px' },
+          { translate: '0px' },
+        ], {
+          duration: 1000,
+          easing: 'cubic-bezier(.4, 1, .4, 1)',
+          fill: 'both'
+        })
+      );
+      const clipOpacityAnimation = new Animation(
+        new KeyframeEffect(clipEl, [
+          { opacity: 0 },
+          { opacity: 1 }
+        ], {
+          duration: 500,
+          easing: 'linear',
+          fill: 'both'
+        })
+      );
+      const clipOpenAnimation = new Animation(
+        new KeyframeEffect(clipEl, [
+          { height: '192px', top: '144px', borderRadius: '8px 8px 24px 24px' },
+          { height: '384px', top: '48px', borderRadius: '24px' }
+        ], {
+          duration: 1000,
+          easing: 'cubic-bezier(.75, 0, .25, 1)',
+          fill: 'both',
+          delay: 500
+        })
+      );
+
+      const pageElOpenAnimation = new Animation(
+        new KeyframeEffect(pageEl, [
+          { height: '192px' },
+          { height: '384px' }
+        ], {
+          duration: 1000,
+          easing: 'cubic-bezier(.75, 0, .25, 1)',
+          fill: 'both',
+          delay: 500
+        })
+      );
+
+      const pageTopOpenAnimation = new Animation(
+        new KeyframeEffect(pageTopEl, [
+          { top: '0px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.12)' },
+          { top: '-144px', boxShadow: '0px 0px 0px rgba(0, 0, 0, 0)' }
+        ], {
+          duration: 1000,
+          easing: 'cubic-bezier(.75, 0, .25, 1)',
+          fill: 'both',
+          delay: 500
+        })
+      );
+
+      const shimmerAnims = [];
+      for (let i = 0; i < shimmerEls.length; i++) {
+        const shimmer = shimmerEls[i];
+        shimmerAnims.push(
+          new Animation(
+            new KeyframeEffect(shimmer, [
+              { transform: 'translateX(-100%)' },
+              { transform: 'translateX(100%)' }
+            ], {
+              duration: 2000,
+              easing: 'linear',
+              iterations: 6,
+              fill: 'both'
+            })
+          )
+        );
       }
 
-      .circle-5 {
-        width: 10px;
-        height: 10px;
-        margin-left: -5px;
-        margin-top: -5px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="loader-container">
-      <div class="orbit-container">
-        <div class="circle circle-1"></div>
+      const pageElOutScaleAnimation = new Animation(
+        new KeyframeEffect(clipEl, [
+          { transform: 'scale(1)' },
+          { transform: 'scale(1.5)' }
+        ], {
+          duration: 500,
+          easing: 'cubic-bezier(.5, 0, .75, -0.34)',
+          fill: 'both'
+        })
+      );
+      const pageElOutOpacityAnimation = new Animation(
+        new KeyframeEffect(clipEl, [
+          { opacity: 1 },
+          { opacity: 0 }
+        ], {
+          duration: 250,
+          easing: 'linear',
+          fill: 'both',
+          delay: 250
+        })
+      );
+
+      // Sequence animations
+      pageTopOpenAnimation.onfinish = () => {
+        shimmerAnims.forEach(anim => anim.play());
+      };
+
+      shimmerAnims[0].onfinish = () => {
+        pageElOutScaleAnimation.play();
+        pageElOutOpacityAnimation.play();
+      };
+
+      // Start animations
+      clipRotateAnimation.play();
+      clipTranslateAnimation.play();
+      clipOpacityAnimation.play();
+      clipOpenAnimation.play();
+      pageElOpenAnimation.play();
+      pageTopOpenAnimation.play();
+    });
+  </script>
+</head>
+
+<body>
+  <div id="container">
+    <div id="fold-clip">
+      <div id="page">
+        <div class="line">
+          <div class="shimmer"></div>
+        </div>
+        <div class="line">
+          <div class="shimmer"></div>
+        </div>
+        <div class="line">
+          <div class="shimmer"></div>
+        </div>
+        <div class="line">
+          <div class="shimmer"></div>
+        </div>
+        <div class="line">
+          <div class="shimmer"></div>
+        </div>
+        <div class="line">
+          <div class="shimmer"></div>
+        </div>
       </div>
-      <div class="orbit-container">
-        <div class="circle circle-2"></div>
-      </div>
-      <div class="orbit-container">
-        <div class="circle circle-3"></div>
-      </div>
-      <div class="orbit-container">
-        <div class="circle circle-4"></div>
-      </div>
-      <div class="orbit-container">
-        <div class="circle circle-5"></div>
-      </div>
+      <div id="page-top"></div>
     </div>
+  </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        performance.mark("WAAPI Animation");
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      performance.mark("WAAPI Animation");
+    });
+  </script>
+</body>
 
-        const orbitContainers = document.querySelectorAll('.orbit-container');
-        const delays = [0, 0.083, 0.167, 0.25, 0.333];
-        const duration = 1770;
-        
-        orbitContainers.forEach((container, index) => {
-          const keyframes = [
-            { transform: 'rotate(0deg)' },
-            { transform: 'rotate(360deg)', offset: 0.857 }, 
-            { transform: 'rotate(360deg)' }
-          ];
-          
-          const timing = {
-            duration: duration,
-            delay: delays[index] * 1000,
-            iterations: Infinity,
-            easing: 'cubic-bezier(0.42, 0, 0.58, 1)'
-          };
-          
-          const animation = container.animate(keyframes, timing);
-        });
-      });
-    </script>
-  </body>
 </html>

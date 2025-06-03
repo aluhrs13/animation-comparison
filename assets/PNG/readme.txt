@@ -1,0 +1,1 @@
+png sequences are at 15 frames per second

@@ -5,26 +5,56 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0" />
-    <title>Animation - GIF</title>
+    <title>GIF animation</title>
     <style>
-      .loader-container {
-        width: 500px;
-        height: 500px;
-        position: relative;
+      :root {
+        --page-padding: 24px;
+        --bg-color: white;
+        --theme-100: #fff1e6;
+        --theme-200: #ffebd4;
+        --theme-300: #ffe4c4;
+        --theme-400: #ffddb4;
+        --open-curve: cubic-bezier(0.75, 0, 0.25, 1);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-color: #1f1f1f;
+          --theme-100: #c8913e;
+          --theme-200: #bc8634;
+          --theme-300: #b68130;
+          --theme-400: #a57221;
+        }
+      }
+
+      body {
+        box-sizing: border-box;
+        margin: 0;
+        padding: var(--page-padding);
+        background-color: var(--bg-color);
         display: flex;
         justify-content: center;
         align-items: center;
+        height: 100vh;
       }
-      
-      .gif-animation {
-        width: 300px;
-        height: 300px;
+
+      div {
+        position: absolute;
+      }
+
+      #container {
+        width: 480px;
+        height: 480px;
+        background-color: var(--bg-color);
       }
     </style>
   </head>
+
   <body>
-    <div class="loader-container">
-      <img src="animation.gif" alt="Loading animation" class="gif-animation">
+    <div id="container">
+      <img
+        src="assets/GIF/Light/Combined_01.gif"
+        alt="Loading animation"/>
     </div>
 
     <script>

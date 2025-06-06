@@ -35,8 +35,6 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      overflow: hidden;
-      /* Don't scroll on scale */
     }
 
     div {
@@ -111,7 +109,7 @@
               transparent 100%);
           rotate: 45deg;
           opacity: 0.25;
-          animation: 2s linear 6 loading 1.5s both;
+          transform: translateX(-100%);
         }
       }
 
@@ -155,33 +153,47 @@
         box-shadow 1s var(--open-curve) 500ms, opacity 10ms linear 13.5s;
     }
 
-    @starting-style {
-      #fold-clip {
-        rotate: -40deg;
-        translate: 0px 104px;
-        opacity: 0;
-        height: 192px;
-        top: 144px;
-        border-radius: 8px 8px 24px 24px;
-        overflow: hidden;
-      }
+    body.reset #page-top,
+    body.reset #page,
+    body.reset #fold-clip,
+    body.reset .line::after {
+      transition: none;
+      animation: none;
+    }
 
-      #page {
-        height: 192px;
-        transform: scale(1);
-        opacity: 1;
-      }
+    body.start #fold-clip {
+      rotate: -40deg;
+      translate: 0px 104px;
+      opacity: 0;
+      height: 192px;
+      top: 144px;
+      border-radius: 8px 8px 24px 24px;
+      overflow: hidden;
+    }
 
-      #page-top {
-        top: 0px;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
-        opacity: 1;
-      }
+    body.start #page {
+      height: 192px;
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    body.start #page-top {
+      top: 0px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+      opacity: 1;
+    }
+
+    body.start .line::after {
+      transform: translateX(-100%);
+    }
+
+    body.running .line::after {
+      animation: 2s linear 6 loading 1.5s both;
     }
   </style>
 </head>
 
-<body>
+<body class="start">
   <div id="container">
     <div id="fold-clip">
       <div id="page">
@@ -197,9 +209,25 @@
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      performance.mark("CSS Animation");
-    });
+    window.onload = () => {
+      const pageEl = document.querySelector("#page");
+
+      // Set up loop
+      pageEl.addEventListener("transitionend", (event) => {
+        if (event.propertyName === "opacity") {
+          document.body.classList.remove("running");
+          document.body.classList.add("reset", "start");
+          setTimeout(() => {
+            document.body.classList.remove("reset", "start");
+            document.body.classList.add("running");
+          }, 10);
+        }
+      });
+
+      // Start the animation
+      document.body.classList.remove("start");
+      document.body.classList.add("running");
+    };
   </script>
 </body>
 

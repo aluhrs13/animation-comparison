@@ -257,8 +257,14 @@
       };
 
       pageElOutOpacityAnimation.onfinish = () => {
-        // Cancel all animations
-        shimmerAnims.forEach(anim => anim.currentTime = 0);
+        // Pause chained animations
+        shimmerAnims.forEach(anim => anim.pause());
+        pageElOutScaleAnimation.pause();
+        pageElOutOpacityAnimation.pause();
+
+        // Reset timeline
+        console.log('Resetting animations');
+        shimmerAnims.forEach(anim => { anim.currentTime = 0; });
         pageElOutScaleAnimation.currentTime = 0;
         pageElOutOpacityAnimation.currentTime = 0;
         clipRotateAnimation.currentTime = 0;

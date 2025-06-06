@@ -34,6 +34,7 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      overflow: hidden;
     }
 
     div {
@@ -52,11 +53,18 @@
       height: 384px;
       width: 288px;
       overflow: hidden;
+
+      rotate: -40deg;
+      translate: 0px 104px;
+      opacity: 0;
+      height: 192px;
+      top: 144px;
+      border-radius: 8px 8px 24px 24px;
     }
 
     #page {
       width: 288px;
-      height: 384px;
+      height: 192px;
       background-color: var(--theme-200);
       border-radius: 24px;
 
@@ -118,6 +126,9 @@
       height: 144px;
       background: linear-gradient(135deg, var(--theme-100), var(--theme-300));
       border-radius: 8px 8px 24px 24px;
+
+      top: 0px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
     }
   </style>
   <script>
@@ -243,6 +254,19 @@
       shimmerAnims[0].onfinish = () => {
         pageElOutScaleAnimation.play();
         pageElOutOpacityAnimation.play();
+      };
+
+      pageElOutOpacityAnimation.onfinish = () => {
+        // Cancel all animations
+        shimmerAnims.forEach(anim => anim.currentTime = 0);
+        pageElOutScaleAnimation.currentTime = 0;
+        pageElOutOpacityAnimation.currentTime = 0;
+        clipRotateAnimation.currentTime = 0;
+        clipTranslateAnimation.currentTime = 0;
+        clipOpacityAnimation.currentTime = 0;
+        clipOpenAnimation.currentTime = 0;
+        pageElOpenAnimation.currentTime = 0;
+        pageTopOpenAnimation.currentTime = 0;
       };
 
       // Start animations

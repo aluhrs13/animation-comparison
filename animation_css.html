@@ -1,206 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0" />
-    <title>CSS animation</title>
-    <style>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSS animation</title>
+  <style>
+    :root {
+      --page-padding: 24px;
+      --bg-color: white;
+      --theme-100: #fff1e6;
+      --theme-200: #ffebd4;
+      --theme-300: #ffe4c4;
+      --theme-400: #ffddb4;
+      --open-curve: cubic-bezier(0.75, 0, 0.25, 1);
+    }
+
+    @media (prefers-color-scheme: dark) {
       :root {
-        --page-padding: 24px;
-        --bg-color: white;
-        --theme-100: #fff1e6;
-        --theme-200: #ffebd4;
-        --theme-300: #ffe4c4;
-        --theme-400: #ffddb4;
-        --open-curve: cubic-bezier(0.75, 0, 0.25, 1);
+        --bg-color: #1f1f1f;
+        --theme-100: #c8913e;
+        --theme-200: #bc8634;
+        --theme-300: #b68130;
+        --theme-400: #a57221;
+      }
+    }
+
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: var(--page-padding);
+      background-color: var(--bg-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      /* Don't scroll on scale */
+    }
+
+    div {
+      position: absolute;
+    }
+
+    #container {
+      width: 480px;
+      height: 480px;
+      background-color: var(--bg-color);
+    }
+
+    #fold-clip {
+      left: 96px;
+      top: 48px;
+      height: 384px;
+      width: 288px;
+      border-radius: 24px;
+      overflow: visible;
+      rotate: 0deg;
+      translate: 0px;
+      opacity: 1;
+
+      transition: rotate 1s cubic-bezier(0.25, 1.5, 0.5, 1),
+        translate 1s cubic-bezier(0.4, 1, 0.4, 1), opacity 500ms linear,
+        height 1s var(--open-curve) 500ms, top 1s var(--open-curve) 500ms,
+        border-radius 1s var(--open-curve) 500ms,
+        overflow 1ms linear 13.5s allow-discrete;
+    }
+
+    @keyframes loading {
+      0% {
+        transform: translateX(-100%);
       }
 
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --bg-color: #1f1f1f;
-          --theme-100: #c8913e;
-          --theme-200: #bc8634;
-          --theme-300: #b68130;
-          --theme-400: #a57221;
-        }
+      100% {
+        transform: translateX(100%);
       }
+    }
 
-      body {
-        box-sizing: border-box;
-        margin: 0;
-        padding: var(--page-padding);
-        background-color: var(--bg-color);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      }
+    #page {
+      width: 288px;
+      height: 384px;
+      background-color: var(--theme-200);
+      border-radius: 24px;
 
-      div {
-        position: absolute;
-      }
+      transform: scale(1.5);
+      opacity: 0;
+      transition: height 1s var(--open-curve) 500ms,
+        transform 0.5s cubic-bezier(0.5, 0, 0.75, -0.34) 13.5s,
+        opacity 0.25s linear 13.75s;
 
-      #container {
-        width: 480px;
-        height: 480px;
-        background-color: var(--bg-color);
-      }
+      .line {
+        left: 24px;
+        height: 24px;
+        width: 240px;
+        border-radius: 12px;
+        background-color: var(--theme-400);
+        overflow: hidden;
 
-      #fold-clip {
-        left: 96px;
-        top: 48px;
-        height: 384px;
-        width: 288px;
-        border-radius: 24px;
-        overflow: visible;
-        rotate: 0deg;
-        translate: 0px;
-        opacity: 1;
-
-        transition: rotate 1s cubic-bezier(0.25, 1.5, 0.5, 1),
-          translate 1s cubic-bezier(0.4, 1, 0.4, 1), opacity 500ms linear,
-          height 1s var(--open-curve) 500ms, top 1s var(--open-curve) 500ms,
-          border-radius 1s var(--open-curve) 500ms,
-          overflow 1ms linear 13.5s allow-discrete;
-      }
-
-      @keyframes loading {
-        0% {
-          transform: translateX(-100%);
-        }
-
-        100% {
-          transform: translateX(100%);
-        }
-      }
-
-      #page {
-        width: 288px;
-        height: 384px;
-        background-color: var(--theme-200);
-        border-radius: 24px;
-
-        transform: scale(1.5);
-        opacity: 0;
-        transition: height 1s var(--open-curve) 500ms,
-          transform 0.5s cubic-bezier(0.5, 0, 0.75, -0.34) 13.5s,
-          opacity 0.25s linear 13.75s;
-
-        .line {
-          left: 24px;
-          height: 24px;
-          width: 240px;
-          border-radius: 12px;
-          background-color: var(--theme-400);
-          overflow: hidden;
-
-          &::after {
-            content: "";
-            position: absolute;
-            width: 480px;
-            height: 480px;
-            top: calc(50% - 240px);
-            left: calc(50% - 240px);
-            background-image: linear-gradient(
-              to right,
+        &::after {
+          content: "";
+          position: absolute;
+          width: 480px;
+          height: 480px;
+          top: calc(50% - 240px);
+          left: calc(50% - 240px);
+          background-image: linear-gradient(to right,
               transparent 0%,
               var(--bg-color) 40%,
               var(--bg-color) 60%,
-              transparent 100%
-            );
-            rotate: 45deg;
-            opacity: 0.25;
-            animation: 2s linear 6 loading 1.5s both;
-          }
+              transparent 100%);
+          rotate: 45deg;
+          opacity: 0.25;
+          animation: 2s linear 6 loading 1.5s both;
         }
+      }
 
-        .line:nth-child(1) {
-          bottom: 312px;
-          width: 108px;
-        }
+      .line:nth-child(1) {
+        bottom: 312px;
+        width: 108px;
+      }
 
-        .line:nth-child(2) {
-          bottom: 264px;
-          width: 168px;
-        }
+      .line:nth-child(2) {
+        bottom: 264px;
+        width: 168px;
+      }
 
-        .line:nth-child(3) {
-          bottom: 192px;
-        }
+      .line:nth-child(3) {
+        bottom: 192px;
+      }
 
-        .line:nth-child(4) {
-          bottom: 144px;
-        }
+      .line:nth-child(4) {
+        bottom: 144px;
+      }
 
-        .line:nth-child(5) {
-          bottom: 96px;
-        }
+      .line:nth-child(5) {
+        bottom: 96px;
+      }
 
-        .line:nth-child(6) {
-          bottom: 48px;
-        }
+      .line:nth-child(6) {
+        bottom: 48px;
+      }
+    }
+
+    #page-top {
+      top: -144px;
+      width: 288px;
+      height: 144px;
+      background: linear-gradient(135deg, var(--theme-100), var(--theme-300));
+      border-radius: 8px 8px 24px 24px;
+      box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+      opacity: 0;
+
+      transition: top 1s var(--open-curve) 500ms,
+        box-shadow 1s var(--open-curve) 500ms, opacity 10ms linear 13.5s;
+    }
+
+    @starting-style {
+      #fold-clip {
+        rotate: -40deg;
+        translate: 0px 104px;
+        opacity: 0;
+        height: 192px;
+        top: 144px;
+        border-radius: 8px 8px 24px 24px;
+        overflow: hidden;
+      }
+
+      #page {
+        height: 192px;
+        transform: scale(1);
+        opacity: 1;
       }
 
       #page-top {
-        top: -144px;
-        width: 288px;
-        height: 144px;
-        background: linear-gradient(135deg, var(--theme-100), var(--theme-300));
-        border-radius: 8px 8px 24px 24px;
-        box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
-        opacity: 0;
-
-        transition: top 1s var(--open-curve) 500ms,
-          box-shadow 1s var(--open-curve) 500ms, opacity 10ms linear 13.5s;
+        top: 0px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+        opacity: 1;
       }
+    }
+  </style>
+</head>
 
-      @starting-style {
-        #fold-clip {
-          rotate: -40deg;
-          translate: 0px 104px;
-          opacity: 0;
-          height: 192px;
-          top: 144px;
-          border-radius: 8px 8px 24px 24px;
-          overflow: hidden;
-        }
-
-        #page {
-          height: 192px;
-          transform: scale(1);
-          opacity: 1;
-        }
-
-        #page-top {
-          top: 0px;
-          box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
-          opacity: 1;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <div id="container">
-      <div id="fold-clip">
-        <div id="page">
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-        </div>
-        <div id="page-top"></div>
+<body>
+  <div id="container">
+    <div id="fold-clip">
+      <div id="page">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
       </div>
+      <div id="page-top"></div>
     </div>
+  </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        performance.mark("CSS Animation");
-      });
-    </script>
-  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      performance.mark("CSS Animation");
+    });
+  </script>
+</body>
+
 </html>

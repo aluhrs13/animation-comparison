@@ -1,63 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0" />
-    <title>No animation</title>
-    <style>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>No animation</title>
+  <style>
+    :root {
+      --page-padding: 24px;
+      --bg-color: white;
+      --theme-100: #fff1e6;
+      --theme-200: #ffebd4;
+      --theme-300: #ffe4c4;
+      --theme-400: #ffddb4;
+      --open-curve: cubic-bezier(0.75, 0, 0.25, 1);
+    }
+
+    @media (prefers-color-scheme: dark) {
       :root {
-        --page-padding: 24px;
-        --bg-color: white;
-        --theme-100: #fff1e6;
-        --theme-200: #ffebd4;
-        --theme-300: #ffe4c4;
-        --theme-400: #ffddb4;
-        --open-curve: cubic-bezier(0.75, 0, 0.25, 1);
+        --bg-color: #1f1f1f;
+        --theme-100: #c8913e;
+        --theme-200: #bc8634;
+        --theme-300: #b68130;
+        --theme-400: #a57221;
+      }
+    }
+
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: var(--page-padding);
+      background-color: var(--bg-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    div {
+      position: absolute;
+    }
+
+    #container {
+      width: 480px;
+      height: 480px;
+      background-color: var(--bg-color);
+    }
+
+    #page {
+      top: 48px;
+      left: 96px;
+      width: 288px;
+      height: 384px;
+      background-color: var(--theme-200);
+      border-radius: 24px;
+
+      .line {
+        left: 24px;
+        height: 24px;
+        width: 240px;
+        border-radius: 12px;
+        background-color: var(--theme-400);
       }
 
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --bg-color: #1f1f1f;
-          --theme-100: #c8913e;
-          --theme-200: #bc8634;
-          --theme-300: #b68130;
-          --theme-400: #a57221;
-        }
+      .line:nth-child(1) {
+        bottom: 312px;
+        width: 108px;
       }
 
-      body {
-        box-sizing: border-box;
-        margin: 0;
-        padding: var(--page-padding);
-        background-color: var(--bg-color);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
+      .line:nth-child(2) {
+        bottom: 264px;
+        width: 168px;
       }
 
-      div {
-        position: absolute;
+      .line:nth-child(3) {
+        bottom: 192px;
       }
 
-      #container {
-        width: 480px;
-        height: 480px;
-        background-color: var(--bg-color);
+      .line:nth-child(4) {
+        bottom: 144px;
       }
-    </style>
-  </head>
 
-  <body>
-    <div id="container">
+      .line:nth-child(5) {
+        bottom: 96px;
+      }
+
+      .line:nth-child(6) {
+        bottom: 48px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    <div id="page">
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
     </div>
+  </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        performance.mark("No Animation");
-      });
-    </script>
-  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      performance.mark("No Animation");
+    });
+  </script>
+</body>
+
 </html>

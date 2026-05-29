@@ -137,10 +137,14 @@
   <div id="root"></div>
 
   <script type="module">
-    import React, { useEffect } from "https://esm.sh/react@18.3.1";
-    import { createRoot } from "https://esm.sh/react-dom@18.3.1/client";
-    import { motion, useAnimate } from "https://esm.sh/framer-motion@11.11.17?deps=react@18.3.1,react-dom@18.3.1";
-    import htm from "https://esm.sh/htm@3.1.1";
+    import {
+      React,
+      useEffect,
+      createRoot,
+      motion,
+      useAnimate,
+    } from "/animation-comparison/lib/framer-motion.js";
+    import htm from "/animation-comparison/lib/htm.js";
 
     const html = htm.bind(React.createElement);
 

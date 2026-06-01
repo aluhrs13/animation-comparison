@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Framer Motion animation</title>
+  <style>
+    :root {
+      --page-padding: 24px;
+      --bg-color: white;
+      --theme-100: #fff1e6;
+      --theme-200: #ffebd4;
+      --theme-300: #ffe4c4;
+      --theme-400: #ffddb4;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-color: #1f1f1f;
+        --theme-100: #c8913e;
+        --theme-200: #bc8634;
+        --theme-300: #b68130;
+        --theme-400: #a57221;
+      }
+    }
+
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: var(--page-padding);
+      background-color: var(--bg-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    div {
+      position: absolute;
+    }
+
+    /* The React mount node must not participate in layout, so #container
+       behaves as the body's direct (centered) flex child like the other demos. */
+    #root {
+      display: contents;
+    }
+
+    #container {
+      width: 480px;
+      height: 480px;
+      background-color: var(--bg-color);
+    }
+
+    /* Static layout; the animated transform/opacity values are owned by Framer Motion. */
+    #fold-clip {
+      left: 96px;
+      top: 144px;
+      width: 288px;
+      height: 192px;
+      overflow: hidden;
+      border-radius: 8px 8px 24px 24px;
+    }
+
+    #page {
+      width: 288px;
+      height: 192px;
+      background-color: var(--theme-200);
+      border-radius: 24px;
+    }
+
+    #page .line {
+      left: 24px;
+      height: 24px;
+      width: 240px;
+      border-radius: 12px;
+      background-color: var(--theme-400);
+      overflow: hidden;
+    }
+
+    #page .line .shimmer {
+      content: "";
+      position: absolute;
+      width: 480px;
+      height: 480px;
+      top: calc(50% - 240px);
+      left: calc(50% - 240px);
+      background-image: linear-gradient(to right,
+          transparent 0%,
+          var(--bg-color) 40%,
+          var(--bg-color) 60%,
+          transparent 100%);
+      rotate: 45deg;
+      opacity: 0.25;
+      transform: translateX(-100%);
+    }
+
+    #page .line:nth-child(1) {
+      bottom: 312px;
+      width: 108px;
+    }
+
+    #page .line:nth-child(2) {
+      bottom: 264px;
+      width: 168px;
+    }
+
+    #page .line:nth-child(3) {
+      bottom: 192px;
+    }
+
+    #page .line:nth-child(4) {
+      bottom: 144px;
+    }
+
+    #page .line:nth-child(5) {
+      bottom: 96px;
+    }
+
+    #page .line:nth-child(6) {
+      bottom: 48px;
+    }
+
+    #page-top {
+      width: 288px;
+      height: 144px;
+      top: 0px;
+      background: linear-gradient(135deg, var(--theme-100), var(--theme-300));
+      border-radius: 8px 8px 24px 24px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="module">
+    import {
+      React,
+      useEffect,
+      createRoot,
+      motion,
+      useAnimate,
+    } from "/animation-comparison/lib/framer-motion.js";
+    import htm from "/animation-comparison/lib/htm.js";
+
+    const html = htm.bind(React.createElement);
+
+    // Easing curves (cubic-bezier control points) shared with the other implementations.
+    const SPRING = [0.25, 1.5, 0.5, 1];
+    const SETTLE = [0.4, 1, 0.4, 1];
+    const OPEN = [0.75, 0, 0.25, 1];
+    const SUCK = [0.5, 0, 0.75, -0.34];
+
+    function Animation() {
+      const [scope, animate] = useAnimate();
+
+      useEffect(() => {
+        let active = true;
+
+        const reset = () =>
+          Promise.all([
+            animate(
+              "#fold-clip",
+              {
+                rotate: -40,
+                y: 104,
+                opacity: 0,
+                scale: 1,
+                height: 192,
+                top: 144,
+                borderTopLeftRadius: 8,
+                borderTopRightRadius: 8,
+              },
+              { duration: 0 }
+            ),
+            animate("#page", { height: 192 }, { duration: 0 }),
+            animate(
+              "#page-top",
+              { top: 0, boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.12)" },
+              { duration: 0 }
+            ),
+            animate(".shimmer", { x: "-100%" }, { duration: 0 }),
+          ]);
+
+        const sequence = [
+          // Unfold the cover.
+          ["#fold-clip", { rotate: [-40, 0] }, { duration: 1, ease: SPRING, at: 0 }],
+          ["#fold-clip", { y: [104, 0] }, { duration: 1, ease: SETTLE, at: 0 }],
+          ["#fold-clip", { opacity: [0, 1] }, { duration: 0.5, ease: "linear", at: 0 }],
+          [
+            "#fold-clip",
+            { height: [192, 384], top: [144, 48], borderTopLeftRadius: [8, 24], borderTopRightRadius: [8, 24] },
+            { duration: 1, ease: OPEN, at: 0.5 },
+          ],
+          ["#page", { height: [192, 384] }, { duration: 1, ease: OPEN, at: 0.5 }],
+          [
+            "#page-top",
+            {
+              top: [0, -144],
+              boxShadow: ["0px 4px 8px rgba(0, 0, 0, 0.12)", "0px 0px 0px rgba(0, 0, 0, 0)"],
+            },
+            { duration: 1, ease: OPEN, at: 0.5 },
+          ],
+          // Suck the page away once the shimmer finishes (~13.5s).
+          ["#fold-clip", { scale: [1, 1.5] }, { duration: 0.5, ease: SUCK, at: 13.5 }],
+          ["#fold-clip", { opacity: [1, 0] }, { duration: 0.25, ease: "linear", at: 13.75 }],
+        ];
+
+        const loop = async () => {
+          while (active) {
+            await reset();
+            // Shimmer sweeps each line 6 times (2s linear, starting after the
+            // unfold). Driven separately because `repeat` is honored on a plain
+            // animate() call but ignored inside a sequence segment.
+            const shimmer = animate(
+              ".shimmer",
+              { x: ["-100%", "100%"] },
+              { duration: 2, ease: "linear", repeat: 5, delay: 1.5 }
+            );
+            await animate(sequence);
+            shimmer.stop();
+          }
+        };
+
+        loop();
+
+        return () => {
+          active = false;
+        };
+      }, [animate]);
+
+      const lines = [];
+      for (let i = 0; i < 6; i++) {
+        lines.push(html`<div class="line" key=${i}><${motion.div} class="shimmer" initial=${{ x: "-100%" }}></${motion.div}></div>`);
+      }
+
+      const foldInitial = {
+        rotate: -40,
+        y: 104,
+        opacity: 0,
+        scale: 1,
+        height: 192,
+        top: 144,
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+      };
+
+      return html`
+        <div id="container" ref=${scope}>
+          <${motion.div} id="fold-clip" initial=${foldInitial}>
+            <${motion.div} id="page" initial=${{ height: 192 }}>${lines}</${motion.div}>
+            <${motion.div} id="page-top" initial=${{ top: 0, boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.12)" }}></${motion.div}>
+          </${motion.div}>
+        </div>
+      `;
+    }
+
+    createRoot(document.getElementById("root")).render(html`<${Animation} />`);
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      performance.mark("Framer Motion Animation");
+    });
+  </script>
+</body>
+
+</html>
